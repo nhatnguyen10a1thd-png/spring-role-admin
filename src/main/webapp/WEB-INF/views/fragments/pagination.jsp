@@ -1,0 +1,17 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<div class="table-footer">
+    <p class="result-summary mb-0"><c:choose><c:when test="${pageData.totalElements > 0}">Hiển thị <strong>${pageData.number * pageData.size + 1}–${pageData.number * pageData.size + pageData.numberOfElements}</strong> trong <strong>${pageData.totalElements}</strong> kết quả</c:when><c:otherwise>0 kết quả</c:otherwise></c:choose></p>
+    <c:if test="${pageData.totalPages > 1}">
+        <c:set var="currentPage" value="${pageData.number + 1}"/>
+        <c:set var="startPage" value="${currentPage > 2 ? currentPage - 2 : 1}"/>
+        <c:set var="endPage" value="${currentPage + 2 < pageData.totalPages ? currentPage + 2 : pageData.totalPages}"/>
+        <nav aria-label="Phân trang"><ul class="pagination pagination-sm mb-0">
+            <li class="page-item ${pageData.first ? 'disabled' : ''}"><c:choose><c:when test="${pageData.first}"><span class="page-link" aria-disabled="true">Trước</span></c:when><c:otherwise><c:url var="previousUrl" value="${basePath}"><c:param name="keyword" value="${keyword}"/><c:param name="size" value="${size}"/><c:param name="page" value="${currentPage - 1}"/></c:url><a class="page-link" href="<c:out value='${previousUrl}'/>">Trước</a></c:otherwise></c:choose></li>
+            <c:if test="${startPage > 1}"><c:url var="firstUrl" value="${basePath}"><c:param name="keyword" value="${keyword}"/><c:param name="size" value="${size}"/><c:param name="page" value="1"/></c:url><li class="page-item"><a class="page-link" href="<c:out value='${firstUrl}'/>" aria-label="Trang 1">1</a></li><c:if test="${startPage > 2}"><li class="page-item disabled"><span class="page-link">…</span></li></c:if></c:if>
+            <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}"><c:url var="pageUrl" value="${basePath}"><c:param name="keyword" value="${keyword}"/><c:param name="size" value="${size}"/><c:param name="page" value="${pageNumber}"/></c:url><li class="page-item ${pageNumber == currentPage ? 'active' : ''}"><c:choose><c:when test="${pageNumber == currentPage}"><span class="page-link" aria-current="page">${pageNumber}</span></c:when><c:otherwise><a class="page-link" href="<c:out value='${pageUrl}'/>" aria-label="Trang ${pageNumber}">${pageNumber}</a></c:otherwise></c:choose></li></c:forEach>
+            <c:if test="${endPage < pageData.totalPages}"><c:if test="${endPage < pageData.totalPages - 1}"><li class="page-item disabled"><span class="page-link">…</span></li></c:if><c:url var="lastUrl" value="${basePath}"><c:param name="keyword" value="${keyword}"/><c:param name="size" value="${size}"/><c:param name="page" value="${pageData.totalPages}"/></c:url><li class="page-item"><a class="page-link" href="<c:out value='${lastUrl}'/>" aria-label="Trang ${pageData.totalPages}">${pageData.totalPages}</a></li></c:if>
+            <li class="page-item ${pageData.last ? 'disabled' : ''}"><c:choose><c:when test="${pageData.last}"><span class="page-link" aria-disabled="true">Sau</span></c:when><c:otherwise><c:url var="nextUrl" value="${basePath}"><c:param name="keyword" value="${keyword}"/><c:param name="size" value="${size}"/><c:param name="page" value="${currentPage + 1}"/></c:url><a class="page-link" href="<c:out value='${nextUrl}'/>">Sau</a></c:otherwise></c:choose></li>
+        </ul></nav>
+    </c:if>
+</div>
